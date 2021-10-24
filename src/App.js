@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [hits, setHits] = useState("");
+  const [hits, setHits] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setlargeImageURL] = useState("");
   const [page, setPage] = useState(1);
@@ -21,15 +21,13 @@ export default function App() {
     setQuery(query);
   };
 
-
   useEffect(() => {
     if (query.trim() === "") {
       return;
     }
-
     setPage(1);
     setHits([]);
-    getImages( {nextQuery: query, page: 1} );
+    getImages( {nextQuery: query, page: page} );
   }, [query]);
 
 
@@ -37,14 +35,14 @@ export default function App() {
     if (page === 1) {
       return;
     }
-    getImages( {nextQuery: query, page: page});
-  }, [query, page]);
+     getImages({nextQuery: query, page: page});
+  }, [ page]);
 
 
-  const getImages = ({nextQuery, page}) => {
-    getPictures( {nextQuery, page} )
-      .then((data) => {
-        setHits((prevhits) => [...prevhits, ...data.hits]);
+  const getImages = ({ nextQuery, page }) => {
+    getPictures({ nextQuery, page })
+      .then(data => {
+         setHits(prev => [...prev, ...data]);
       })
       .then(() => {
         return window.scrollTo({
@@ -128,14 +126,14 @@ export default function App() {
 //   const nextQuery = this.state.query;
 //   const page = this.state.page;
 
-//   if (nextQuery !== prevQuery) {
-//     this.setState({ page: 1, hits: [] });
-//     this.getImages({ nextQuery: nextQuery, page: 1 });
-//   }
+  // if (nextQuery !== prevQuery) {
+  //   this.setState({ page: 1, hits: [] });
+  //   this.getImages({ nextQuery: nextQuery, page: 1 });
+  // }
 
-//   if (page !== prevState.page && page !== 1) {
-//     this.getImages({ nextQuery: nextQuery, page: page });
-//   }
+  // if (page !== prevState.page && page !== 1) {
+  //   this.getImages({ nextQuery: nextQuery, page: page });
+  // }
 // }
 
 // getImages = (nextQuery, page) => {
